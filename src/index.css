@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&display=swap');
+@import 'tailwindcss';
+
+:root {
+  --bg: #060810;
+  --surface: #0d1120;
+  --surface-2: #131929;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-accent: rgba(61, 255, 160, 0.25);
+  --text: #dde4f0;
+  --text-muted: #5a6480;
+  --text-dim: #8b98b8;
+  --accent: #3dffa0;
+  --accent-dim: rgba(61, 255, 160, 0.12);
+  --accent-glow: rgba(61, 255, 160, 0.08);
+  --red: #ff5f6b;
+  --amber: #ffb830;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+::selection {
+  background: rgba(61, 255, 160, 0.2);
+  color: var(--accent);
+}
