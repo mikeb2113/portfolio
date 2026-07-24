@@ -886,7 +886,7 @@ function ContactSection() {
     if (!inputVal.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:3001/api/contact", {
+      const response = await fetch("https://portfolio-emailer-91q1.onrender.com/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

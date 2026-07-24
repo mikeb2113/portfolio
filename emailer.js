@@ -5,9 +5,24 @@ import "dotenv/config";
 
 const app = express();
 
-app.use(cors({
-  origin: "http://localhost:8443",
-}));
+const allowedOrigins = [
+  "http://localhost:8443",
+  "http://localhost:5173",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow requests with no Origin, such as health checks
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Origin not allowed by CORS: ${origin}`));
+    },
+  })
+);
 
 app.use(express.json());
 
@@ -16,16 +31,13 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/contact", async (req, res) => {
-  const { message } = req.body;
-  const { subject_line } = req.body;
+  const { message, subject_line } = req.body;
 
   if (!message?.trim()) {
     return res.status(400).json({
       error: "Message is required",
     });
   }
-
-  console.log("Received contact request:", message);
 
   try {
     const transporter = nodemailer.createTransport({
@@ -36,30 +48,29 @@ app.post("/api/contact", async (req, res) => {
       },
     });
 
-    await transporter.verify();
-    console.log("Gmail authentication successful");
-
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: "mikebermudez2113@gmail.com",
-      subject: subject_line,
-      text: message,
+      to: process.env.EMAIL_TO ?? process.env.EMAIL_USER,
+      subject: subject_line?.trim() || "Portfolio contact message",
+      text: message.trim(),
     });
 
     console.log("Email sent:", info.messageId);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
     });
   } catch (err) {
     console.error("Email error:", err);
 
-    res.status(500).json({
-      error: err.message,
+    return res.status(500).json({
+      error: "Unable to send email",
     });
   }
 });
 
-app.listen(3001, () => {
-  console.log("Email server running at http://localhost:3001");
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+  console.log(`Email server running on port ${PORT}`);
 });
