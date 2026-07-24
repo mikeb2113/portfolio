@@ -9,7 +9,6 @@ const allowedOrigins = [
   "http://localhost:8443",
   "http://localhost:5173",
   process.env.FRONTEND_URL,
-  process.env.PORT,
 ].filter(Boolean);
 
 app.use(
